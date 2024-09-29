@@ -17,5 +17,7 @@ jobs:
           node-version: 20
       - name: Install dependencies
         uses: ./.github/workflows/scripts/pnpmInstall
+        with:
+          devDeps: true
       - name: Run type check
         run: pnpm run check
