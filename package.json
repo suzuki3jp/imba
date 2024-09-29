@@ -1,0 +1,20 @@
+{
+  "name": "imba",
+  "private": true,
+  "author": "suzuki3jp",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc && resolve-tspaths",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "resolve-tspaths": "^0.8.22",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  }
+}

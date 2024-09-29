@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Node modules
+node_modules
+
+# Build output
+dist
+
+# Environment variables
+.env
+
+# Editor config
+.vscode
+
+# Docker
+dockerfile
+.dockerignore
+
+# Docs
+README.md
+LICENSE

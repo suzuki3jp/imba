@@ -1,0 +1,12 @@
+services:
+  app:
+    image: imba:${IMAGE_TAG:-latest}
+    container_name: imba
+    ports:
+      - "1111:1111"
+    volumes:
+      - ./.env:/usr/src/app/.env
+      - ./src/data/config.json:/usr/src/app/dist/data/config.json
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
