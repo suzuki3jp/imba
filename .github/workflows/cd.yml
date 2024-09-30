@@ -1,0 +1,77 @@
+name: CD to production VPS
+on:
+  pull_request:
+    branches:
+        - main
+    types: [closed]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: imba
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Log in to the ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value={{sha}}
+            type=ref,event=branch
+            type=ref,event=tag
+
+      - name: Build and push Docker image to ghcr.io
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_SHA: ${{ github.sha }}
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          envs: DEPLOY_PATH,GITHUB_TOKEN,REGISTRY,IMAGE_SHA,IMAGE_NAME
+          script: |
+            cd $DEPLOY_PATH
+            echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
+            docker pull $REGISTRY/$IMAGE_NAME:$IMAGE_SHA
+            docker-compose down
+            IMAGE_TAG=$IMAGE_SHA docker-compose up -d
+            docker image prune -f
