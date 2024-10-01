@@ -81,16 +81,15 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_SHA: ${{ env.GITHUB_SHA }}
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
-          envs: DEPLOY_PATH,GITHUB_TOKEN,REGISTRY,IMAGE_SHA,IMAGE_NAME
+          envs: DEPLOY_PATH,GITHUB_TOKEN,REGISTRY,IMAGE_NAME
           script: |
             cd $DEPLOY_PATH
             echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.repository_owner }} --password-stdin
-            IMAGE_FULL=$REGISTRY/$IMAGE_NAME:$IMAGE_SHA
+            IMAGE_FULL=$REGISTRY/$IMAGE_NAME:$GITHUB_SHA
             echo $IMAGE_FULL
             docker pull $IMAGE_FULL
             docker compose down
