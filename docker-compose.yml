@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/imba:${IMAGE_TAG:-latest}
+    image: $IMAGE_FULL
     container_name: imba
     ports:
       - '1111:1111'
