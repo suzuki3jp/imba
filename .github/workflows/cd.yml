@@ -81,7 +81,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_SHA: ${{ github.sha }}
+          IMAGE_SHA: ${{ env.GITHUB_SHA }}
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
