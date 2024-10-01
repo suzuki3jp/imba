@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/suzuki3jp/imba:latest # TODO: ${IMAGE_FULL} でやっても読み込みに失敗したため応急処置的にlatest指定
+    image: ghcr.io/suzuki3jp/imba # TODO: ${IMAGE_FULL} でやっても読み込みに失敗したため応急処置的にlatest指定
     container_name: imba
     ports:
       - '1111:1111'
