@@ -55,6 +55,9 @@ jobs:
     if: github.event.pull_request.merged == true
     needs: build-and-push
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -86,7 +89,7 @@ jobs:
           envs: DEPLOY_PATH,GITHUB_TOKEN,REGISTRY,IMAGE_SHA,IMAGE_NAME
           script: |
             cd $DEPLOY_PATH
-            echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
+            echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.repository_owner }} --password-stdin
             docker pull $REGISTRY/$IMAGE_NAME:$IMAGE_SHA
             docker compose down
             IMAGE_TAG=$IMAGE_SHA docker compose up -d
