@@ -61,6 +61,8 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USER }}
       DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
     steps:
+      - name: Temp step to debug
+        run: ls
       - name: Transfer docker-compose to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
