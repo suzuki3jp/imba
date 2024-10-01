@@ -1,6 +1,6 @@
 services:
   app:
-    image: $IMAGE_FULL
+    image: ${IMAGE_FULL}
     container_name: imba
     ports:
       - '1111:1111'
