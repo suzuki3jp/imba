@@ -90,7 +90,7 @@ jobs:
           script: |
             cd $DEPLOY_PATH
             echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.repository_owner }} --password-stdin
-            IMAGE_TAG=${IMAGE_SHA::0:7:-latest}
+            IMAGE_TAG=${IMAGE_SHA:0:7:-latest}
             IMAGE_FULL=$REGISTRY/$IMAGE_NAME:$IMAGE_TAG
             echo $IMAGE_FULL
             docker pull $IMAGE_FULL
