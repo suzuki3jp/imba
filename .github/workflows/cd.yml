@@ -88,6 +88,6 @@ jobs:
             cd $DEPLOY_PATH
             echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
             docker pull $REGISTRY/$IMAGE_NAME:$IMAGE_SHA
-            docker-compose down
-            IMAGE_TAG=$IMAGE_SHA docker-compose up -d
+            docker compose down
+            IMAGE_TAG=$IMAGE_SHA docker compose up -d
             docker image prune -f
