@@ -91,8 +91,9 @@ jobs:
             cd $DEPLOY_PATH
             echo $GITHUB_TOKEN | docker login $REGISTRY -u ${{ github.repository_owner }} --password-stdin
             IMAGE_TAG=${IMAGE_SHA:0:7}
-            IMAGE_FULL=$REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+            export IMAGE_FULL=$REGISTRY/$IMAGE_NAME:$IMAGE_TAG
             docker pull $IMAGE_FULL
             docker compose down
             docker compose up -d
             docker image prune -f
+            export -n IMAGE_FULL
