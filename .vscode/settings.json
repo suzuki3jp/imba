@@ -1,5 +1,5 @@
 {
     "editor.formatOnSave": true,
     "editor.wordWrap": "on",
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+    "editor.defaultFormatter": "biomejs.biome"
+}
